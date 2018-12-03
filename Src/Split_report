@@ -1,0 +1,45 @@
+Loop Splitting
+
+for(int i = m; i < n; i+=j)
+	to
+for(int i = m;     i < n; i+=5*j)
+for(int i = m+j;   i < n; i+=5*j)
+for(int i = m+2*j; i < n; i+=5*j)
+for(int i = m+3*j; i < n; i+=5*j)
+for(int i = m+4*j; i < n; i+=5*j)
+
+Loop legality->
+
+Before doing any loop splitting, it is checked that i, m, n, j are not redefined and i is not used anywhere. This is explained through following cases(Assume nsplits = 5)
+
+1) for(i = 0; i < 10; i++)
+		a[k++] = i
+	Originally, array contents were in linear increasing order. But after splitting, it will change something like (0,5,1,6,2,7,..)
+
+=> i cannot be used.
+2) for(i = 0;  i < n; i++){
+	int k++;
+	if(k == 3)
+		n = 3
+}
+		n = 10
+	Originally, loop will run(10-m) times since i is initialised only once. But in case of splitting, only first split will work.
+3) for()
+
+Loop Versioning
+
+for(int i = m; i < n; i+=j)
+	to 
+if(rand)
+	for(int i = m; i < n; i+=j)
+else
+	for(int i = m; i < n; i+=j)
+
+How to?
+
+Procedure->
+
+1) Go to predecessor of loop. Here remove the instructions to move to for.body or for.end. Instead, load a random integer 0 or 1. Compare this randomly generated value with 1. If smaller, go to if.then otherwise if.else. Detail
+2) Create a clone of the loop. Detail
+3) Attach with if.then and if.else. Detail
+4) Terminating instruction. Detail.
